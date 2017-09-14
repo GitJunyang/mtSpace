@@ -1,0 +1,35 @@
+一、技术说明:
+1.前台:EasyUI
+2.后台框架:Spring/SpringMVC/Mybatis-plus
+3.权限框架:Apache的Shiro
+4.数据库:MySql
+5.项目包管理工具:Maven
+6.工作流:activiti
+
+二、现有模块说明:
+1.activiti模块:工作流相关的内容
+2.application模块:工作流申请模块,目前只有一个请假申请的小模块,后续的工作流申请相关的东西都加在此模块中
+3.common模块:公共代码模块
+4.system模块:系统模块
+
+三、自动生成代码说明:
+1.自动生成代码功能代码位于common模块下的zcode包中,在生成代码时需要手动在GeneratorCode类中配置的项主要有四点:
+(1):配置你生成代码的位置。例如  gc.setOutputDir("F:/code");
+(2):配置你的svn用户名。例如  gc.setAuthor("junyang.liu");
+(3):配置你要生成的表的表名。例如  strategy.setInclude(new String[] {"sys_oper_log"});
+(4):配置你生成代码所在的模块。例如  pc.setModuleName("system");
+2.在生成代码时务必注意在数据库中为每个表添加表名称并为每个字段添加注释，这样生成的实体类才能自带注释！！！
+
+四、系统日志配置:
+1.在Controller层的方法上添加@SysLog(value="操作名称")或者@SysLog，可根据需要选择性的添加此注解。
+
+五、数据字典:
+1.在common模块下的utils包 ConstantUtils类中通过枚举的方式添加,配置数据字典务必在此类中作配置,杜绝硬编码的出现。
+
+六、遇到问题总结:
+1.源码中文注释乱码?
+	(1)修改Eclipse中文本文件的默认编码：windows->Preferences->general->Workspace->Text file encoding设置为UTF-8
+	(2)修改JAVA源文件的默认编码：windows->Preferences->general->Content Types->右侧Context Types树，点开Text，选择Java Source File,
+	在下面的Default encoding输入框中输入UTF-8，点Update
+2.系统操作日志出现中文乱码?
+	(1)修改项目默认编码：右键项目->Properties->Resource->Text file encoding设置为UTF-8
