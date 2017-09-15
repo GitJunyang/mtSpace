@@ -12,21 +12,20 @@
 <script type="text/javascript" src="/mtplatform/resource/jeasyui/jquery.easyui.min.js"></script>
 </head>
 <body>
-<div class="login" onkeydown="keylogin()">
+<div class="login">
     <div class="message">管理登录</div>
     <div id="darkbannerwrap"></div>
-	<form name="loginform" id="loginform" method="post">
-		<input name="loginName" placeholder="用户名" required type="text">
+	<form id="loginform" method="post">
+		<input name="loginName" placeholder="用户名" required type="text" autocomplete="off">
 		<hr class="hr15">
 		<input name="loginPwd" placeholder="密码" required type="password">
 		<hr class="hr15">
-		<input name="btn" value="登录" style="width:100%;" type="button" onclick="login()">
+		<input value="登录" style="width:100%;" type="button" onclick="login()">
 		<hr class="hr20">
 		<div style="margin-top:18px;text-align: center"><span id="msg" style="color:red;"></span></div>
 	</form>
 </div>
 <script type="text/javascript">
-	//点击登录
 	function login(){
 		$("#loginform").form("submit",{
 			url:"${pageContext.request.contextPath}/login",
@@ -39,14 +38,6 @@
 				}
 			}
 		});
-	}
-	//回车登录
-	function keylogin(){
-		if (event.keyCode == 13){
-		    event.returnValue=false;
-			event.cancel = true;
-			loginform.btn.click();
-		}
 	}
 </script>
 </body>

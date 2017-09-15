@@ -51,10 +51,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 		
 		String userId = user.getId();
 		String[] roleIds = userVo.getRoleIds().split(",");
+		SysUserRole userRole = new SysUserRole();
 		
 		for(String roleId : roleIds){
-			SysUserRole userRole = new SysUserRole();
-			userRole.setRoleId(roleId.trim());
+			userRole.setRoleId(roleId);
 			userRole.setUserId(userId);
 			sysUserRoleDao.insert(userRole);
 		}
