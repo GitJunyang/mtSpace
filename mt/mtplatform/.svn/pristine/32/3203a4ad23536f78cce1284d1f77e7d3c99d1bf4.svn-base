@@ -16,9 +16,9 @@
     <div class="message">魔盾科技管理系统</div>
     <div id="darkbannerwrap"></div>
 	<form name="loginform" id="loginform" method="post">
-		<input name="loginName" placeholder="请输入用户名" required type="text">
+		<input name="loginName" placeholder="用户名" required type="text">
 		<hr class="hr15">
-		<input name="loginPwd" placeholder="请输入密码" required type="password">
+		<input name="loginPwd" placeholder="密码" required type="password">
 		<hr class="hr15">
 		<input name="btn" value="登录" style="width:100%;" type="button" onclick="login()">
 		<hr class="hr20">
