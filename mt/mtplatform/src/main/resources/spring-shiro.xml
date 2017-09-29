@@ -26,15 +26,9 @@
         <property name="filterChainDefinitions">
             <value>
                 <!-- anon:不需要认证    authc:需要认证   user:验证通过或RememberMe登录的都可以 -->
-                /resource/** = anon   		<!--系统静态文件  -->
-                /login = anon		  		<!--登录入口  -->
-                /dingapi/** = anon   		<!--钉钉的接口地址  -->
-                /swagger-ui.* = anon  		<!--springfox-swagger-ui的静态文件  -->
-                /webjars/** = anon		  	<!--springfox-swagger-ui的静态文件  -->
-                /configuration/** = anon	<!--springfox-swagger-ui的静态文件  -->
-                /v2/api-docs = anon			<!--springfox-swagger-ui的静态文件  -->
-                /swagger-resources = anon	<!--springfox-swagger-ui的静态文件  -->
-                /** = authc					<!--其余的全部需要认证  -->
+                /resource/** = anon
+                /login = anon
+                /** = authc
             </value>
         </property>
     </bean>

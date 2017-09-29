@@ -25,11 +25,7 @@
         <activiti:taskListener event="create" delegateExpression="${userTaskListener}"></activiti:taskListener>
       </extensionElements>
     </userTask>
-    <endEvent id="endevent1" name="End">
-      <extensionElements>
-        <activiti:executionListener event="end" delegateExpression="${exeListener}"></activiti:executionListener>
-      </extensionElements>
-    </endEvent>
+    <endEvent id="endevent1" name="End"></endEvent>
     <sequenceFlow id="flow6" sourceRef="usertask4" targetRef="endevent1"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow7" sourceRef="usertask2" targetRef="exclusivegateway2"></sequenceFlow>

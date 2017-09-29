@@ -159,7 +159,7 @@ function tVacationGetCommentsFun(id) {
     }
     $("#tVacationGetComments").dialog({
         title : '查看审批进度',
-        width : 700,
+        width : 600,
         height : 400,
         href :  '${ctx}/tVacation/tVacationGetCommentsPage?id=' + id,
         buttons : [ {
@@ -195,6 +195,32 @@ function tVacationGetProcessImageFun(id) {
         } ]
     });
 }
+
+/**
+ * 删除
+ */
+/*  function tVacationDeleteFun(id) {
+     if (id == undefined) {//点击右键菜单才会触发这个
+         var rows = tVacationDataGrid.datagrid('getSelections');
+         id = rows[0].id;
+     } else {//点击操作里面的删除图标会触发这个
+         tVacationDataGrid.datagrid('unselectAll').datagrid('uncheckAll');
+     }
+     parent.$.messager.confirm('询问', '您是否要删除当前角色？', function(b) {
+         if (b) {
+             progressLoad();
+             $.post('${ctx}/tVacation/delete', {
+                 id : id
+             }, function(result) {
+                 if (result.success) {
+                     parent.$.messager.alert('提示', result.msg, 'info');
+                     tVacationDataGrid.datagrid('reload');
+                 }
+                 progressClose();
+             }, 'JSON');
+         }
+     });
+} */
 
 /**
  * 清除

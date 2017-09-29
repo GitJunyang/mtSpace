@@ -7,19 +7,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.ActivitiTaskAlreadyClaimedException;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.DelegationState;
 import org.activiti.engine.task.Task;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.moutum.mtplatform.activiti.model.TUserTask;
 import com.moutum.mtplatform.activiti.service.ActivitiService;
@@ -70,6 +74,9 @@ public class ActivitiController extends BaseController{
     private SysUserService sysUserService;
 	@Autowired
     private TUserTaskService tUserTaskService;
+	@Autowired
+	private HistoryService historyService;
+	
 	
 	/**
      * 部署流程定义页
@@ -210,13 +217,6 @@ public class ActivitiController extends BaseController{
 		model.addAttribute("vacation", vacation);
 		model.addAttribute("task", task);
 		model.addAttribute("comments", comments);
-		
-    	String taskKey = task.getTaskDefinitionKey();
-    	if(StringUtils.contains("SVacation_Modify", taskKey)){
-    		return "application/tVacationModify";
-    	}else if(StringUtils.contains("SVacation_Terminate", taskKey)){
-    		return "application/tVacationTerminate";
-    	}
         return "activiti/taskComplate";
     }
     
@@ -242,18 +242,14 @@ public class ActivitiController extends BaseController{
     	//添加意见
     	ShiroUser shiroUser= (ShiroUser)SecurityUtils.getSubject().getPrincipal();
     	identityService.setAuthenticatedUserId(shiroUser.getId());
-    	taskService.addComment(task.getId(), processInstance.getId(),String.valueOf(commentResult), commentContent);
+    	taskService.addComment(task.getId(), processInstance.getId(), commentContent);
     	//完成任务
     	Map<String, Object> variables = new HashMap<String, Object>();
     	TVacation vacation = tVacationService.selectById(vacationId);
     	if(ConstantUtils.vacationStatus.PASSED.getValue()==commentResult){
     		variables.put("isPass", true);
-    		//存请假结果的变量
-        	runtimeService.setVariable(vacation.getProcInstId(), "vacationResult", "pass");
     	}else if(ConstantUtils.vacationStatus.NOT_PASSED.getValue()==commentResult){
     		variables.put("isPass", false);
-    		//存请假结果的变量
-        	runtimeService.setVariable(vacation.getProcInstId(), "vacationResult", "notPass");
     	}
     	
     	// 完成委派任务
@@ -261,9 +257,28 @@ public class ActivitiController extends BaseController{
     		this.taskService.resolveTask(taskId, variables);
     		return renderSuccess("办理委派任务成功！");
     	}
-    	
     	//完成正常办理任务
     	taskService.complete(task.getId(), variables);
+    	
+    	//更新请假审批状态
+    	ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(vacation.getProcInstId()).singleResult();
+    	if(pi==null){
+    		//hisVar有值代表是会签任务，没值代表是其他任务
+    		HistoricVariableInstance  hisVar= historyService.createHistoricVariableInstanceQuery()
+    				.processInstanceId(task.getProcessInstanceId()).variableName("passCount")
+    				.singleResult();
+    		if(hisVar!=null){
+    			return renderSuccess("办理成功！");
+    		}else{
+    			if(ConstantUtils.vacationStatus.PASSED.getValue()==commentResult){
+            		vacation.setVacationStatus(ConstantUtils.vacationStatus.PASSED.getValue());
+            	}else if(ConstantUtils.vacationStatus.NOT_PASSED.getValue()==commentResult){
+            		vacation.setVacationStatus(ConstantUtils.vacationStatus.NOT_PASSED.getValue());
+            	}
+    			//更新请假业务
+            	tVacationService.updateById(vacation);
+    		}
+    	}
     	return renderSuccess("办理成功！");
     }
     
