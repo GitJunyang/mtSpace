@@ -140,10 +140,8 @@ public class TVacationController extends BaseController{
 				vo.setCommentResult("不同意");
 			}else if("continue".equals(comment.getType())){
 				vo.setCommentResult("重新申请");
-			}else if("stop".equals(comment.getType())){
-				vo.setCommentResult("结束流程");
 			}else if("terminate".equals(comment.getType())){
-				vo.setCommentResult("销假结束");
+				vo.setCommentResult("结束流程");
 			}
 			comments.add(vo);
 		}

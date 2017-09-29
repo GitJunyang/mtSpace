@@ -75,18 +75,18 @@ public class TVacationServiceImpl extends ServiceImpl<TVacationDao, TVacation> i
     	ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
     	ShiroUser shiroUser= (ShiroUser)SecurityUtils.getSubject().getPrincipal();
     	identityService.setAuthenticatedUserId(shiroUser.getId());
+    	taskService.addComment(task.getId(), processInstance.getId(),"continue", "调整申请");
 		//更新请假数据
 		tVacationDao.updateById(vacation);
 		//完成当前任务
 		Map<String,Object> variables = new HashMap<String,Object>();
 		if("continue".equals(commentResult)){
-    		taskService.addComment(task.getId(), processInstance.getId(),"continue", "发起人重新申请");
     		variables.put("isPass", true);
-    	}else if("stop".equals(commentResult)){
-    		taskService.addComment(task.getId(), processInstance.getId(),"stop", "发起人结束流程");
+    	}else if("terminate".equals(commentResult)){
     		variables.put("isPass", false);
     	}
 		taskService.complete(taskId, variables);
+		
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class TVacationServiceImpl extends ServiceImpl<TVacationDao, TVacation> i
     	ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
     	ShiroUser shiroUser= (ShiroUser)SecurityUtils.getSubject().getPrincipal();
     	identityService.setAuthenticatedUserId(shiroUser.getId());
-    	taskService.addComment(task.getId(), processInstance.getId(),"terminate", "发起人销假结束");
+    	taskService.addComment(task.getId(), processInstance.getId(),"terminate", "结束流程");
 		//更新请假数据
 		TVacation tvacation = tVacationDao.selectById(vacation.getId());
 		tvacation.setBeginDate(vacation.getBeginDate());

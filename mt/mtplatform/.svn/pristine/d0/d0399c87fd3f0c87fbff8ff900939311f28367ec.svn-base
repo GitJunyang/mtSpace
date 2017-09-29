@@ -242,7 +242,7 @@ public class ActivitiController extends BaseController{
     	//添加意见
     	ShiroUser shiroUser= (ShiroUser)SecurityUtils.getSubject().getPrincipal();
     	identityService.setAuthenticatedUserId(shiroUser.getId());
-    	taskService.addComment(task.getId(), processInstance.getId(),String.valueOf(commentResult), commentContent);
+    	taskService.addComment(task.getId(), processInstance.getId(), commentContent);
     	//完成任务
     	Map<String, Object> variables = new HashMap<String, Object>();
     	TVacation vacation = tVacationService.selectById(vacationId);

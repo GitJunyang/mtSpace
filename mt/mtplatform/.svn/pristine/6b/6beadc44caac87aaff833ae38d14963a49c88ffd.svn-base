@@ -159,7 +159,7 @@ function tVacationGetCommentsFun(id) {
     }
     $("#tVacationGetComments").dialog({
         title : '查看审批进度',
-        width : 700,
+        width : 600,
         height : 400,
         href :  '${ctx}/tVacation/tVacationGetCommentsPage?id=' + id,
         buttons : [ {

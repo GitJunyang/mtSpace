@@ -34,7 +34,6 @@ import com.moutum.mtplatform.application.service.TVacationService;
 import com.moutum.mtplatform.common.base.BaseController;
 import com.moutum.mtplatform.common.operlog.SysLog;
 import com.moutum.mtplatform.common.shiro.ShiroUser;
-import com.moutum.mtplatform.common.utils.ConstantUtils;
 import com.moutum.mtplatform.common.utils.DateUtils;
 import com.moutum.mtplatform.common.utils.PageInfo;
 import com.moutum.mtplatform.system.model.SysUser;
@@ -134,17 +133,6 @@ public class TVacationController extends BaseController{
 			vo.setCommentContent(comment.getFullMessage());
 			HistoricTaskInstance his= historyService.createHistoricTaskInstanceQuery().taskId(comment.getTaskId()).singleResult();
 			vo.setCommentTask(his.getName());
-			if(ConstantUtils.vacationStatus.PASSED.getValue().toString().equals(comment.getType())){
-				vo.setCommentResult("同意");
-			}else if(ConstantUtils.vacationStatus.NOT_PASSED.getValue().toString().equals(comment.getType())){
-				vo.setCommentResult("不同意");
-			}else if("continue".equals(comment.getType())){
-				vo.setCommentResult("重新申请");
-			}else if("stop".equals(comment.getType())){
-				vo.setCommentResult("结束流程");
-			}else if("terminate".equals(comment.getType())){
-				vo.setCommentResult("销假结束");
-			}
 			comments.add(vo);
 		}
 		model.addAttribute("comments", comments);
